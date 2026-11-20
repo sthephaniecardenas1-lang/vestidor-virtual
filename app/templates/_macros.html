@@ -1,0 +1,15 @@
+{# Plataforma giratoria (aros detrás y delante de los pies) #}
+{% macro aros(lado) -%}
+<svg class="aros aros-{{ lado }}" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+  {% if lado == "atras" %}
+  <ellipse class="disco" cx="200" cy="70" rx="170" ry="36"/>
+  <path class="aro" d="M30,70 A170,36 0 0 1 370,70"/>
+  <path class="aro giro" d="M48,62 A152,30 0 0 1 352,62"/>
+  {% else %}
+  <path class="aro" d="M30,70 A170,36 0 0 0 370,70"/>
+  <path class="aro giro" d="M48,78 A152,30 0 0 0 352,78"/>
+  <path class="flecha" d="M300,101 l14,-4 -9,-10"/>
+  <path class="flecha" d="M100,101 l-14,-4 9,-10"/>
+  {% endif %}
+</svg>
+{%- endmacro %}

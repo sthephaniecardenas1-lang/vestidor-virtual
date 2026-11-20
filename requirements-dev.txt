@@ -1,0 +1,5 @@
+numpy
+opencv-contrib-python-headless
+pillow
+rembg==2.0.87
+onnxruntime

@@ -1,0 +1,73 @@
+{# Panel de resultados. Se usa dentro de probador.html y también solo (GET /probador/panel). #}
+{% set ev = evaluacion %}
+<div class="panel-interno" data-puntaje="{{ ev.puntaje if ev and ev.puntaje is not none else '' }}"
+     data-look="{{ ev.look.nombre if ev and ev.look_exacto else '' }}">
+
+{% if error %}
+  <div class="alerta error">
+    <strong>Ups, algo no cuadra.</strong>
+    <p>{{ error }}</p>
+  </div>
+
+{% elif not ev or not ev.prendas %}
+  <div class="saludo">
+    <h2>¡Hola! 👋</h2>
+    <p class="suave">
+      {% if enviado %}{{ ev.etiqueta if ev else "Elige al menos una prenda." }}{% else %}
+      Toca las prendas del clóset para vestir a la avatar. Te voy diciendo si combinan,
+      por qué, y qué le falta al outfit.{% endif %}
+    </p>
+    <ul class="tips">
+      <li>Toca otra vez una prenda (o tócala en la avatar) para quitarla.</li>
+      <li>Elige el clima y te aviso si algo no va.</li>
+      <li>¿Sin ideas? Dale a <strong>🎲 Sorpréndeme</strong>.</li>
+    </ul>
+  </div>
+
+{% else %}
+  {% if ev.puntaje is not none %}
+    <div class="puntaje" style="--p: {{ ev.puntaje }}"><span data-numero>{{ ev.puntaje }}</span></div>
+    <h2 class="etiqueta">{{ ev.etiqueta }}</h2>
+  {% else %}
+    <h2 class="etiqueta">{{ ev.etiqueta }}</h2>
+    <p class="suave centro">Agrega otra prenda y te digo qué tal.</p>
+  {% endif %}
+
+  <ul class="chips">
+    {% for p in ev.prendas %}
+    <li>
+      <i style="background: {{ COLORES[p.color].hex }}"></i>{{ p.nombre }}
+      <a href="{{ url_alternar(seleccion, clima, p.categoria, p.id) }}" data-poner="{{ p.id }}" data-categoria="{{ p.categoria }}"
+         class="quitar" aria-label="Quitar {{ p.nombre }}">×</a>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {% if ev.detalles_color %}
+  <h3>Colores</h3>
+  <ul class="lista">
+    {% for d in ev.detalles_color %}<li>{{ d }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if ev.avisos %}
+  <h3>Ojo con esto</h3>
+  <ul class="lista avisos">
+    {% for a in ev.avisos %}<li>{{ a }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if ev.sugerencias %}
+  <h3>Para completar</h3>
+  <ul class="sugerencias">
+    {% for cat, p in ev.sugerencias.items() %}
+    <li>
+      <span><i style="background: {{ COLORES[p.color].hex }}"></i>{{ CATEGORIAS[cat] }}: <strong>{{ p.nombre }}</strong></span>
+      <a class="boton chico" href="{{ url_alternar(seleccion, clima, cat, p.id) }}" data-poner="{{ p.id }}" data-categoria="{{ cat }}">Ponérmelo</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+{% endif %}
+</div>

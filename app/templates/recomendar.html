@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% from "_macros.html" import aros %}
+{% block titulo %}Recomiéndame · Vestidor Virtual{% endblock %}
+
+{% block contenido %}
+<section class="panel recomendar-form">
+  <h2>¿Qué tienes en mente?</h2>
+  <p class="suave">Elige uno o varios filtros y te muestro los tres looks que más se acercan.</p>
+
+  <form method="post" action="/recomendar" class="filtros">
+    <fieldset>
+      <legend>Color</legend>
+      <div class="paleta">
+        <label class="muestra"><input type="radio" name="color" value="" {% if not filtros.color %}checked{% endif %}><span>cualquiera</span></label>
+        {% for c, datos in COLORES.items() %}
+        <label class="muestra">
+          <input type="radio" name="color" value="{{ c }}" {% if filtros.color == c %}checked{% endif %}>
+          <span><i style="background: {{ datos.hex }}"></i>{{ nombre_color(c) }}</span>
+        </label>
+        {% endfor %}
+      </div>
+    </fieldset>
+
+    <div class="dos">
+      <label>
+        <span>Estilo</span>
+        <select name="estilo">
+          <option value="">Cualquiera</option>
+          {% for e in ESTILOS %}
+          <option value="{{ e }}" {% if filtros.estilo == e %}selected{% endif %}>{{ e|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>
+        <span>Clima</span>
+        <select name="clima">
+          <option value="">Cualquiera</option>
+          {% for c in CLIMAS %}
+          <option value="{{ c }}" {% if filtros.clima == c %}selected{% endif %}>{{ NOMBRE_CLIMA[c]|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+
+    <button class="boton" type="submit">Buscar looks</button>
+  </form>
+</section>
+
+{% if error %}
+<div class="alerta error ancho">
+  <strong>Ups, algo no cuadra.</strong>
+  <p>{{ error }}</p>
+</div>
+{% endif %}
+
+{% if resultados is not none %}
+  {% if resultados %}
+  <section class="tarjetas">
+    {% for r in resultados %}
+    <article class="tarjeta">
+      <div class="escenario mini aparecer">
+        {{ aros("atras") }}
+        <div class="modelo">{{ r.avatar|safe }}</div>
+        {{ aros("frente") }}
+      </div>
+      <div class="tarjeta-cuerpo">
+        <p class="pre">#{{ loop.index }} · {{ r.afinidad }}% afinidad</p>
+        <h3>{{ r.look.nombre }}</h3>
+        <p class="suave">{{ r.look.descripcion }}</p>
+        <ul class="lista">
+          {% for razon in r.razones %}<li>{{ razon }}</li>{% endfor %}
+        </ul>
+        <p class="armonia">Armonía del look: <strong>{{ r.armonia }}/100</strong></p>
+        <a class="boton" href="/probador?{{ r.look.query_probador() }}">Probármelo</a>
+      </div>
+    </article>
+    {% endfor %}
+  </section>
+  {% else %}
+  <div class="alerta ancho"><p>No encontré ningún look con esos filtros. Prueba quitando alguno.</p></div>
+  {% endif %}
+{% endif %}
+{% endblock %}

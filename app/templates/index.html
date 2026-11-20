@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% from "_macros.html" import aros %}
+
+{% block contenido %}
+<section class="portada">
+  <div class="portada-texto">
+    <p class="pre">¿Combina o no combina?</p>
+    <h1>Pruébate la ropa antes de sacarla del clóset</h1>
+    <p>
+      Toca una prenda y la modelo se la prueba. Mientras armas el outfit,
+      la app te dice qué tan bien combina según la teoría del color, el estilo y el clima,
+      y te sugiere qué le falta.
+    </p>
+    <div class="acciones">
+      <a class="boton" href="/probador">Empezar a jugar</a>
+      <a class="boton secundario" href="/probador?{{ looks[0][0].query_probador() }}">Ver un look armado</a>
+    </div>
+  </div>
+  <figure class="portada-avatar escenario animando" aria-label="Modelo girando en la plataforma">
+    {{ aros("atras") }}
+    <div class="modelo">{{ avatar|safe }}</div>
+    {{ aros("frente") }}
+  </figure>
+</section>
+
+<section class="como">
+  <h2>¿Cómo decide si combina?</h2>
+  <div class="tres">
+    <article>
+      <h3>Colores · 40 %</h3>
+      <p>Neutros, monocromáticos, análogos o complementarios. Más de dos colores protagonistas resta.</p>
+    </article>
+    <article>
+      <h3>Estilos · 40 %</h3>
+      <p>Casual, formal, bohemio o deportivo. Un sastre con tenis de correr te va a sacar un aviso.</p>
+    </article>
+    <article>
+      <h3>Clima · 20 %</h3>
+      <p>Opcional. Si dices que hace frío, el lino y las sandalias pierden puntos.</p>
+    </article>
+  </div>
+</section>
+
+<section class="lookbook">
+  <h2>Looks para inspirarte</h2>
+  <p class="suave">Looks de referencia. Toca uno para armarlo en el probador.</p>
+  <div class="mini-looks">
+    {% for look, svg in looks %}
+    <a href="/probador?{{ look.query_probador() }}">
+      <span class="escenario mini">{{ aros("atras") }}<span class="modelo">{{ svg|safe }}</span>{{ aros("frente") }}</span>
+      <span>{{ look.nombre }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

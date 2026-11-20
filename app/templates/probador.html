@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% from "_macros.html" import aros %}
+{% block titulo %}Probador · Vestidor Virtual{% endblock %}
+{% block cuerpo_clase %}pagina-probador{% endblock %}
+
+{% set iconos = {
+  "superior": '<path d="M8 4l4 2 4-2 4 3-2 3-2-1v11H8V9L6 10 4 7z"/>',
+  "inferior": '<path d="M7 3h10l1 18h-4l-2-11-2 11H6z"/>',
+  "abrigo": '<path d="M8 3l4 3 4-3 4 3v15h-5l-3-9-3 9H4V6z"/>',
+  "calzado": '<path d="M4 15c3 0 5-1 6-4l3 1c1 2 3 3 7 3v4H4z"/>',
+  "bolso": '<path d="M5 9h14l-1 11H6zM9 9a3 3 0 016 0"/>',
+  "cuello": '<path d="M6 5c1 6 11 6 12 0M8 12a4 3 0 008 0M12 15v3"/>',
+  "cabeza": '<path d="M4 15h16M6 15c0-6 3-9 6-9s6 3 6 9"/>',
+} %}
+
+{% set cortos = {"superior": "Arriba", "inferior": "Abajo", "abrigo": "Abrigo", "calzado": "Zapatos",
+                 "bolso": "Bolso", "cuello": "Cuello", "cabeza": "Cabeza"} %}
+
+{% block contenido %}
+{% set ev = evaluacion %}
+<div class="juego">
+
+  {# ===================== CLÓSET ===================== #}
+  <section class="closet" aria-label="Clóset">
+    <header class="closet-cabeza">
+      <h2>Mi clóset</h2>
+      <form class="form-clima" method="get" action="/probador">
+        {% for cat, valor in seleccion.items() %}{% if valor %}<input type="hidden" name="{{ cat }}" value="{{ valor }}">{% endif %}{% endfor %}
+        <input type="hidden" name="enviado" value="1">
+        <label class="clima">
+          <span>Clima</span>
+          <select name="clima" id="clima">
+            <option value="">No importa</option>
+            {% for c in CLIMAS %}
+            <option value="{{ c }}" {% if clima == c %}selected{% endif %}>{{ NOMBRE_CLIMA[c]|capitalize }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <noscript><button class="boton chico">Aplicar</button></noscript>
+      </form>
+    </header>
+
+    <nav class="pestanas" role="tablist" aria-label="Categorías">
+      {% for cat, nombre_cat in CATEGORIAS.items() %}
+      <button type="button" role="tab" class="pestana {% if loop.first %}activa{% endif %} {% if seleccion[cat] %}con-prenda{% endif %}"
+              data-pestana="{{ cat }}" aria-selected="{{ 'true' if loop.first else 'false' }}" title="{{ nombre_cat }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true">{{ iconos[cat]|safe }}</svg>
+        <span>{{ cortos[cat] }}</span>
+      </button>
+      {% endfor %}
+    </nav>
+
+    {% for cat, nombre_cat in CATEGORIAS.items() %}
+    <div class="estante {% if loop.first %}activo{% endif %}" role="tabpanel" data-estante="{{ cat }}" aria-label="{{ nombre_cat }}">
+      <h3 class="estante-titulo">{{ nombre_cat }}</h3>
+      <div class="rejilla">
+        {% for p in grupos[cat] %}
+        {% set puesta = seleccion[cat] == p.id %}
+        <div class="tarjeta-prenda {% if puesta %}puesta{% endif %}" data-tarjeta="{{ p.id }}">
+          <a class="poner" href="{{ url_alternar(seleccion, clima, cat, p.id) }}" data-poner="{{ p.id }}"
+             data-categoria="{{ cat }}" aria-pressed="{{ 'true' if puesta else 'false' }}">
+            <span class="mini-prenda">{{ miniatura(p.id)|safe }}</span>
+            <span class="nombre">{{ p.nombre }}</span>
+            <span class="meta"><i style="background: {{ COLORES[p.color].hex }}"></i>{{ nombre_color(p.color) }} · {{ p.estilos[0] }}</span>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+
+  {# ===================== ESPEJO ===================== #}
+  <section class="vestidor" aria-label="Avatar">
+    <div class="escenario" id="escenario">
+      {{ aros("atras") }}
+      <div class="modelo" id="modelo">{{ avatar|safe }}</div>
+      {{ aros("frente") }}
+      <div class="efectos" id="efectos" aria-hidden="true"></div>
+      <p class="pista" id="pista">Toca una prenda del clóset para vestirla ✨</p>
+      <button type="button" class="btn-animar" id="btn-animar" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 4 0 0016 0M20 12a8 4 0 00-16 0M12 4v4M12 16v4"/></svg>
+        <span>Animar</span>
+      </button>
+    </div>
+    <div class="controles">
+      <div class="sorpresa">
+        <select id="sorpresa-estilo" aria-label="Estilo para Sorpréndeme">
+          <option value="">Cualquier estilo</option>
+          {% for e in ESTILOS %}<option value="{{ e }}">{{ e|capitalize }}</option>{% endfor %}
+        </select>
+        <button type="button" class="boton" id="btn-sorpresa">🎲 Sorpréndeme</button>
+      </div>
+      <div class="fila">
+        <button type="button" class="boton chico secundario" id="btn-deshacer" disabled title="Deshacer (Ctrl+Z)">↶ Deshacer</button>
+        <a class="boton chico secundario" id="btn-quitar" href="/probador">Quitar todo</a>
+      </div>
+    </div>
+  </section>
+
+  {# ===================== RESULTADO ===================== #}
+  <aside class="panel resultado" id="panel" aria-live="polite">
+    {% include "_panel.html" %}
+  </aside>
+</div>
+
+
+<script id="estado" type="application/json">{{ {"seleccion": seleccion, "clima": clima}|tojson }}</script>
+<script src="{{ url_for('static', path='js/probador.js') }}" defer></script>
+{% endblock %}
