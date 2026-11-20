@@ -374,17 +374,3 @@ legend { font-weight: 700; font-size: .85rem; margin-bottom: .4rem; }
   .juego { grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); }
   .resultado { grid-column: 1 / -1; position: static; max-height: none; }
 }
-@media (max-width: 760px) {
-  .barra { padding: .7rem 1rem; }
-  .marca { font-size: 1.1rem; white-space: nowrap; }
-  nav { display: flex; gap: .7rem; }
-  nav a { margin-left: 0; font-size: .8rem; white-space: nowrap; }
-  .marca { font-size: 1rem; }
-  .juego, .portada, .tres, .tarjetas, .dos { grid-template-columns: 1fr; }
-  .vestidor { position: static; order: -1; }
-  .escenario { max-height: 72vh; margin: 0 auto; }
-  .btn-animar { left: auto; right: 12px; transform: none; }
-  .rejilla { max-height: none; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-  .mini-looks { grid-template-columns: repeat(2, 1fr); }
-  .portada-avatar { order: -1; }
-}

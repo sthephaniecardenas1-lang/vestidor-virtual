@@ -1,10 +1,12 @@
-﻿# Vestidor Virtual 👗
+# Vestidor Virtual 👗
 
 Un probador virtual que se juega como un juego de vestir. La modelo está de pie sobre una plataforma de estudio. Tocas una prenda del clóset y se la pone al instante, en su capa correcta. Mientras armas el outfit, la app te dice qué tan bien combina (de 0 a 100) y por qué, te avisa si algo choca y te sugiere qué le falta.
 
 Hecho con **FastAPI**, **Jinja2** y **pytest**.
 
 ![Demo del probador](evidencias/demo.gif)
+
+> La app está pensada para usarse en el computador, en el navegador, con el servidor local de Uvicorn (`http://127.0.0.1:8000`).
 
 ---
 
@@ -178,6 +180,13 @@ Abre **http://127.0.0.1:8000**.
 pytest -v
 ```
 
+**Así se vio en mi computador** (Windows, Python 3.12.10):
+
+![pytest 1](evidencias/terminal/04_pytest_1.jpg)
+![pytest 2](evidencias/terminal/05_pytest_2.jpg)
+![pytest 3](evidencias/terminal/06_pytest_3.jpg)
+![pytest 4](evidencias/terminal/07_pytest_4_y_servidor.jpg)
+
 **Resultado: 117 pruebas, 117 exitosas** (43 funciones; varias usan `parametrize`, por ejemplo una prueba por cada una de las 61 prendas).
 
 ### Lógica de combinación (`test_combinador.py`)
@@ -235,14 +244,39 @@ pytest -v
 
 ## 7. Evidencias de funcionamiento
 
+### La aplicación
+
 | | |
 |---|---|
 | **Inicio** ![](evidencias/01_inicio.jpg) | **Modelo sin ropa encima** ![](evidencias/02_probador_base.jpg) |
 | **Vistiendo a la modelo** ![](evidencias/03_vistiendo.jpg) | **Animar** ![](evidencias/04_animar.jpg) |
 | **Sorpréndeme** ![](evidencias/05_sorprendeme.jpg) | **Vista previa al pasar el mouse** ![](evidencias/06_vista_previa.jpg) |
 | **Avisos de estilo y clima** ![](evidencias/07_avisos.jpg) | **Dato inválido** ![](evidencias/08_error.jpg) |
-| **Recomendador** ![](evidencias/09_recomendador.jpg) | **Celular** ![](evidencias/10_movil.jpg) |
-| **pytest** ![](evidencias/11_pytest.jpg) | |
+| **Recomendador** ![](evidencias/09_recomendador.jpg) | |
+
+### Instalación en mi computador
+
+| | | |
+|---|---|---|
+| ![](evidencias/terminal/01_instalacion_1.jpg) | ![](evidencias/terminal/02_instalacion_2.jpg) | ![](evidencias/terminal/03_instalacion_3.jpg) |
+
+### Ejecución de las pruebas (117 passed)
+
+| | |
+|---|---|
+| ![](evidencias/terminal/04_pytest_1.jpg) | ![](evidencias/terminal/05_pytest_2.jpg) |
+| ![](evidencias/terminal/06_pytest_3.jpg) | ![](evidencias/terminal/07_pytest_4_y_servidor.jpg) |
+
+### Servidor funcionando
+
+Cada vez que toco una prenda, el navegador le pide el panel a FastAPI (`GET /probador/panel?...`) y responde `200 OK`. Al final apagué el servidor con Ctrl + C.
+
+| | |
+|---|---|
+| ![](evidencias/terminal/08_servidor_1.jpg) | ![](evidencias/terminal/09_servidor_2.jpg) |
+| ![](evidencias/terminal/10_servidor_3.jpg) | ![](evidencias/terminal/11_servidor_4.jpg) |
+| ![](evidencias/terminal/12_servidor_5.jpg) | ![](evidencias/terminal/13_servidor_6.jpg) |
+| ![](evidencias/terminal/14_servidor_7.jpg) | ![](evidencias/terminal/15_servidor_apagado.jpg) |
 
 ---
 
