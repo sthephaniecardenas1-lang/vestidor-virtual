@@ -1,4 +1,4 @@
-# Vestidor Virtual 👗
+﻿# Vestidor Virtual 👗
 
 Un probador virtual que se juega como un juego de vestir. La modelo está de pie sobre una plataforma de estudio. Tocas una prenda del clóset y se la pone al instante, en su capa correcta. Mientras armas el outfit, la app te dice qué tan bien combina (de 0 a 100) y por qué, te avisa si algo choca y te sugiere qué le falta.
 
@@ -154,7 +154,7 @@ flowchart LR
 **Requisitos:** Python 3.10 o superior.
 
 ```bash
-git clone https://github.com/TU-USUARIO/vestidor-virtual.git
+git clone https://github.com/sthephaniecardenas1-lang/vestidor-virtual.git
 cd vestidor-virtual
 python -m venv venv
 venv\Scripts\activate          # Windows   (macOS/Linux: source venv/bin/activate)
